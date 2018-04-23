@@ -12,6 +12,7 @@ If your server has at least 2 game modes that can be played on many maps, use vo
 
 # How To Use
 Make sure your maps and variants folders have the game modes you want to use (comes with some default variants and all default maps) otherwise you won't be able to select any.
+If you downloaded a map and it didn't come in a folder, make a folder for that gametype/map with the name you want it to have otherwise ElDewrito will not be able to load it, neither will this.
 
 ## Voting
 Select the maps you want your server to use in the top left list and select game variants in the top right.
