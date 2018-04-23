@@ -6,9 +6,9 @@ My tool to make it easier to make a voting.json file for Eldewrito.
 # Installation
 Unzip the folder into your Halo Online (Or whatever you renamed it to, the one with ldorado.exe).
 
-# Should I use voting.json or veto.json?
-If your server is running on game modes that only need 1 map play, use veto.json.
-If your server has at least 2 game modes that can be played on many maps, use voting.json
+# Should I use voting or veto?
+If your server is running on game modes that only need 1 map play, use veto.
+If your server has at least 2 game modes that can be played on many maps, use voting.
 
 # How To Use
 Make sure your maps and variants folders have the game modes you want to use (comes with some default variants and all default maps) otherwise you won't be able to select any.
