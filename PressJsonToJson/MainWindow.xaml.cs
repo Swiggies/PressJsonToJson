@@ -39,36 +39,39 @@ namespace PressJsonToJson
                 ListMaps.Items.Add(newItem);
             }
 
+            var types = GetGametypes();
             foreach (KeyValuePair<string, string> kv in defaults.defaultTypes)
             {
                 var newItem = new ListBoxItem();
                 newItem.Content = kv.Key;
                 ListVariants.Items.Add(newItem);
+                newItem.Selected += (sender, r) => AdvancedGametypeWindow(maps, newItem);
             }
 
-            var types = GetGametypes();
             foreach (string s in types)
             {
                 var newItem = new ListBoxItem();
                 newItem.Content = s.Split('\\').Last();
                 ListVariants.Items.Add(newItem);
-                newItem.Selected += (sender, r) =>
+                newItem.Selected += (sender, r) => AdvancedGametypeWindow(maps, newItem);
+            }
+        }
+
+        private void AdvancedGametypeWindow(string[] maps, ListBoxItem boxItem)
+        {
+            var w = new MoreGametype(maps, boxItem.Content.ToString());
+            if (w.ShowDialog() == false)
+            {
+                Types foo = w.typeStuff;
+                for (int i = 0; i < this.types.Count; i++)
                 {
-                    var w = new MoreGametype(maps, newItem.Content.ToString());
-                    if (w.ShowDialog() == false)
+                    if (this.types[i].displayName == foo.displayName)
                     {
-                        Types foo = w.typeStuff;
-                        for(int i = 0; i < this.types.Count; i++)
-                        {
-                            if (this.types[i].displayName == foo.displayName)
-                            {
-                                this.types[i] = foo;
-                                return;
-                            }
-                        }
-                        this.types.Add(foo);
+                        this.types[i] = foo;
+                        return;
                     }
-                };
+                }
+                this.types.Add(foo);
             }
         }
 
@@ -85,19 +88,71 @@ namespace PressJsonToJson
             }
         }
 
-        public string[] GetGametypes()
+        public List<string> GetGametypes()
         {
             try
             {
-                return Directory.GetDirectories($"{Environment.CurrentDirectory}/../mods/variants");
+                return Directory.GetDirectories($"{Environment.CurrentDirectory}/../mods/variants").ToList();
             }catch(IOException e)
             {
                 MessageBox.Show("Couldn't find any variants. Is this in the right place?");
-                return new string[0];
+                return new List<string>();
             }
         }
 
-    public string ConvertToJson()
+    public void ConvertToJson()
+        {
+            if (ListMaps.SelectedItems.Count > 0)
+                txt_Ouput.Text = MakeVotingJson();
+            else
+                txt_Ouput.Text = MakeVetoJson();          
+        }
+
+        public string MakeVetoJson()
+        {
+            Playlist p = new Playlist();
+            List<Veto> vList = new List<Veto>();
+
+            var t = ListVariants.SelectedItems;
+            //Go through each selected item in the list
+            foreach (ListBoxItem x in t)
+            {
+                Veto v = new Veto();
+                v.gametype.displayName = x.Content.ToString();
+                v.gametype.typeName = x.Content.ToString();
+                //Check if they match with any of the types in this.types
+                foreach (Types y in this.types)
+                {
+                    //If they do, do things
+                    if (y.displayName == v.gametype.displayName && y.typeName == v.gametype.typeName)
+                    {
+                        v.gametype.commands = y.commands;
+                        Console.WriteLine(y.SpecificMaps.Last().displayName);
+                        if (defaults.defaultMaps.ContainsKey(y.SpecificMaps.Last().displayName))
+                        {
+                            v.map.displayName = y.SpecificMaps.Last().displayName;
+                            v.map.mapName = defaults.defaultMaps[y.SpecificMaps.Last().displayName];
+                        }
+                        else
+                        {
+                            v.map.displayName = y.SpecificMaps.Last().displayName;
+                            v.map.mapName = y.SpecificMaps.Last().displayName;
+                        }
+                    }
+                }
+                vList.Add(v);
+            }
+            p.playlist = vList;
+
+            if (types.Count < 2)
+                MessageBox.Show("You need at least 2 gametypes selected.");
+            if (types.Count >= 2)
+                MessageBox.Show("No maps selected. Making a veto.json instead.");
+
+            return JsonConvert.SerializeObject(p, Formatting.Indented);
+        }
+
+        public string MakeVotingJson()
         {
             Voting v = new Voting();
 
@@ -109,7 +164,8 @@ namespace PressJsonToJson
                 if (defaults.defaultMaps.ContainsKey(x.Content.ToString()))
                 {
                     newMap = new Maps(x.Content.ToString(), defaults.defaultMaps[x.Content.ToString()]);
-                }else
+                }
+                else
                 {
                     newMap = new Maps(x.Content.ToString());
                 }
@@ -119,15 +175,13 @@ namespace PressJsonToJson
 
             List<Types> types = new List<Types>();
             var t = ListVariants.SelectedItems;
-            foreach(ListBoxItem x in t)
+            foreach (ListBoxItem x in t)
             {
                 Types type = new Types(x.Content.ToString());
-                type.displayName = x.Content.ToString();
-                type.typeName = x.Content.ToString();
                 types.Add(type);
-                foreach(Types y in this.types)
+                foreach (Types y in this.types)
                 {
-                    if(y.displayName == type.displayName && y.typeName == type.typeName)
+                    if (y.displayName == type.displayName && y.typeName == type.typeName)
                     {
                         type.commands = y.commands;
                         type.SpecificMaps = y.SpecificMaps;
@@ -135,12 +189,14 @@ namespace PressJsonToJson
                 }
             }
             v.Types = types;
+            if (maps.Count < 2 || types.Count < 2)
+                MessageBox.Show("You have less than 2 maps or game variants selected. There will be some compatibility issues with Eldewrito.");
             return JsonConvert.SerializeObject(v, Formatting.Indented);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            txt_Ouput.Text = ConvertToJson();
+            ConvertToJson();
         }
     }
 }

@@ -49,11 +49,8 @@ namespace PressJsonToJson
 
             for (int line = 0; line < lineCount; line++)
             {
-                string s = commands.GetLineText(line);
-                if (s.EndsWith("\r\n"))
-                    typeStuff.commands.Add(s.Substring(0, s.Length - 2));
-                else
-                    typeStuff.commands.Add(s);
+                string s = commands.GetLineText(line).Trim();
+                typeStuff.commands.Add(s);
             }
 
             this.Close();

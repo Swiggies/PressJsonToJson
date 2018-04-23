@@ -86,8 +86,11 @@
     <Compile Include="MoreGametype.xaml.cs">
       <DependentUpon>MoreGametype.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VetoTypes.cs" />
     <Compile Include="Types.cs" />
-    <Compile Include="voting.cs" />
+    <Compile Include="Playlist.cs" />
+    <Compile Include="Veto.cs" />
+    <Compile Include="Voting.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
