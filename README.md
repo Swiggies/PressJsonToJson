@@ -12,6 +12,7 @@ If your server has at least 2 game modes that can be played on many maps, use vo
 
 # How To Use
 Make sure your maps and variants folders have the game modes you want to use (comes with some default variants and all default maps) otherwise you won't be able to select any.
+
 If you downloaded a map and it didn't come in a folder, make a folder for that gametype/map with the name you want it to have otherwise ElDewrito will not be able to load it, neither will this.
 
 ## Voting
@@ -23,5 +24,5 @@ If you want your variant to only run with a specific map, don't select the map i
 ## Veto
 Select the game modes you want to use in the top right list. When the advanced game types window is shows select the map(s) to go with that game mode. Do not select any maps in the top right pane otherwise a voting.json will be generated.
 
-# My json file isn't working. Why
+# My json file isn't working. Why?
 Check your dorito.logs file for any errors.
