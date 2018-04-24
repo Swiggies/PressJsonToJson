@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
+using System.IO;
+using System.Windows;
 
 namespace PressJsonToJson
 {
@@ -32,9 +35,31 @@ namespace PressJsonToJson
             {"Oddball", "Oddball" }
         };
 
-        public Dictionary<string,string> GetMaps()
+        public string[] GetMaps()
         {
-            return defaultMaps;
+            try
+            {
+                return Directory.GetDirectories($"{Environment.CurrentDirectory}/../mods/maps");
+
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show("Couldn't find any maps. Is this in the right place?");
+                return new string[0];
+            }
+        }
+
+        public List<string> GetGametypes()
+        {
+            try
+            {
+                return Directory.GetDirectories($"{Environment.CurrentDirectory}/../mods/variants").ToList();
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show("Couldn't find any variants. Is this in the right place?");
+                return new List<string>();
+            }
         }
     }
 }

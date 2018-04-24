@@ -14,12 +14,12 @@ namespace PressJsonToJson
     /// </summary>
     public partial class MoreGametype : MetroWindow
     {
-        public Types typeStuff;
+        public VotingTypes typeStuff;
 
         public MoreGametype(string[] maps, string typeName)
         {
             InitializeComponent();
-            typeStuff = new Types(typeName);
+            typeStuff = new VotingTypes(typeName);
 
             Defaults defaults = new Defaults();
             foreach (KeyValuePair<string, string> kv in defaults.defaultMaps)

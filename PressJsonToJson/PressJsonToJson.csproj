@@ -81,16 +81,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Defaults.cs" />
-    <Compile Include="Maps.cs" />
+    <Compile Include="Objects\Defaults.cs" />
+    <Compile Include="Objects\FTP.cs" />
+    <Compile Include="Objects\ListItem.cs" />
+    <Compile Include="Objects\Maps.cs" />
     <Compile Include="MoreGametype.xaml.cs">
       <DependentUpon>MoreGametype.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VetoTypes.cs" />
-    <Compile Include="Types.cs" />
-    <Compile Include="Playlist.cs" />
-    <Compile Include="Veto.cs" />
-    <Compile Include="Voting.cs" />
+    <Compile Include="Objects\VetoTypes.cs" />
+    <Compile Include="Objects\VotingTypes.cs" />
+    <Compile Include="Objects\Playlist.cs" />
+    <Compile Include="Objects\Veto.cs" />
+    <Compile Include="Objects\Voting.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -147,5 +149,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

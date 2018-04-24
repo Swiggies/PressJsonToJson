@@ -9,6 +9,6 @@ namespace PressJsonToJson
     class Voting
     {
         public List<Maps> Maps;
-        public List<Types> Types;
+        public List<VotingTypes> Types;
     }
 }

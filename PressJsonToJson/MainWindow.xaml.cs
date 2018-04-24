@@ -16,7 +16,7 @@ namespace PressJsonToJson
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        List<Types> types = new List<Types>();
+        List<VotingTypes> types = new List<VotingTypes>();
         List<Maps> maps = new List<Maps>();
         Defaults defaults = new Defaults();
 
@@ -24,6 +24,7 @@ namespace PressJsonToJson
         {
             InitializeComponent();
 
+            //Get Maps
             foreach (KeyValuePair<string, string> kv in defaults.defaultMaps)
             {
                 var newItem = new ListBoxItem();
@@ -31,7 +32,7 @@ namespace PressJsonToJson
                 ListMaps.Items.Add(newItem);
             }
 
-            var maps = GetMaps();
+            var maps = defaults.GetMaps();
             foreach (string s in maps)
             {
                 var newItem = new ListBoxItem();
@@ -39,7 +40,7 @@ namespace PressJsonToJson
                 ListMaps.Items.Add(newItem);
             }
 
-            var types = GetGametypes();
+
             foreach (KeyValuePair<string, string> kv in defaults.defaultTypes)
             {
                 var newItem = new ListBoxItem();
@@ -48,6 +49,8 @@ namespace PressJsonToJson
                 newItem.Selected += (sender, r) => AdvancedGametypeWindow(maps, newItem);
             }
 
+            //Get Gametypes
+            var types = defaults.GetGametypes();
             foreach (string s in types)
             {
                 var newItem = new ListBoxItem();
@@ -62,7 +65,7 @@ namespace PressJsonToJson
             var w = new MoreGametype(maps, boxItem.Content.ToString());
             if (w.ShowDialog() == false)
             {
-                Types foo = w.typeStuff;
+                VotingTypes foo = w.typeStuff;
                 for (int i = 0; i < this.types.Count; i++)
                 {
                     if (this.types[i].displayName == foo.displayName)
@@ -72,31 +75,6 @@ namespace PressJsonToJson
                     }
                 }
                 this.types.Add(foo);
-            }
-        }
-
-        public string[] GetMaps()
-        {
-            try
-            {
-                return Directory.GetDirectories($"{Environment.CurrentDirectory}/../mods/maps");
-
-            } catch (IOException e)
-            {
-                MessageBox.Show("Couldn't find any maps. Is this in the right place?");
-                return new string[0];
-            }
-        }
-
-        public List<string> GetGametypes()
-        {
-            try
-            {
-                return Directory.GetDirectories($"{Environment.CurrentDirectory}/../mods/variants").ToList();
-            }catch(IOException e)
-            {
-                MessageBox.Show("Couldn't find any variants. Is this in the right place?");
-                return new List<string>();
             }
         }
 
@@ -121,30 +99,33 @@ namespace PressJsonToJson
                 v.gametype.displayName = x.Content.ToString();
                 v.gametype.typeName = x.Content.ToString();
                 //Check if they match with any of the types in this.types
-                foreach (Types y in this.types)
+                foreach (VotingTypes y in this.types)
                 {
                     //If they do, do things
                     if (y.displayName == v.gametype.displayName && y.typeName == v.gametype.typeName)
                     {
                         v.gametype.commands = y.commands;
-                        Console.WriteLine(y.SpecificMaps.Last().displayName);
-                        if (defaults.defaultMaps.ContainsKey(y.SpecificMaps.Last().displayName))
+                        foreach (Maps m in y.SpecificMaps)
                         {
-                            v.map.displayName = y.SpecificMaps.Last().displayName;
-                            v.map.mapName = defaults.defaultMaps[y.SpecificMaps.Last().displayName];
-                        }
-                        else
-                        {
-                            v.map.displayName = y.SpecificMaps.Last().displayName;
-                            v.map.mapName = y.SpecificMaps.Last().displayName;
+                            if (defaults.defaultMaps.ContainsKey(m.displayName))
+                            {
+                                v.map.displayName = m.displayName;
+                                v.map.mapName = defaults.defaultMaps[m.displayName];
+                            }
+                            else
+                            {
+                                v.map.displayName = m.displayName;
+                                v.map.mapName = m.displayName;
+                            }
+                            vList.Add(v);
                         }
                     }
                 }
-                vList.Add(v);
+
             }
             p.playlist = vList;
 
-            if (types.Count < 2)
+            if (vList.Count < 2)
                 MessageBox.Show("You need at least 2 gametypes selected.");
             if (types.Count >= 2)
                 MessageBox.Show("No maps selected. Making a veto.json instead.");
@@ -173,13 +154,13 @@ namespace PressJsonToJson
             }
             v.Maps = maps;
 
-            List<Types> types = new List<Types>();
+            List<VotingTypes> types = new List<VotingTypes>();
             var t = ListVariants.SelectedItems;
             foreach (ListBoxItem x in t)
             {
-                Types type = new Types(x.Content.ToString());
+                VotingTypes type = new VotingTypes(x.Content.ToString());
                 types.Add(type);
-                foreach (Types y in this.types)
+                foreach (VotingTypes y in this.types)
                 {
                     if (y.displayName == type.displayName && y.typeName == type.typeName)
                     {
@@ -197,6 +178,13 @@ namespace PressJsonToJson
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ConvertToJson();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            FTP ftp = new FTP();
+            ftp.GetMapFoldersOverFTP();
+            ftp.GetTypeFoldersOverFTP();
         }
     }
 }
