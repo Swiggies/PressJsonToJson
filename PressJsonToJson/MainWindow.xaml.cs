@@ -25,9 +25,16 @@ namespace PressJsonToJson
 
         public MainWindow()
         {
+
             InitializeComponent();
             //CheckLocation();
             PopulateListViews();
+            if (Settings.Default.firstRun)
+            {
+                ShowLocateDialog();
+                Settings.Default.firstRun = false;
+                Settings.Default.Save();
+            }
         }
 
         //Fill the list view with default stuff and custom stuff.
@@ -80,6 +87,8 @@ namespace PressJsonToJson
                 dlg.IsFolderPicker = true;
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                     modsPath = dlg.FileName;
+                else
+                    return;
                 Settings.Default.modsPath = modsPath;
                 Settings.Default.Save();
 
@@ -95,7 +104,7 @@ namespace PressJsonToJson
             }
             catch (IOException e)
             {
-                MessageBox.Show("Couldn't find any maps. You either have none or you selected the wrong place.");
+                //MessageBox.Show("Couldn't find any maps. You either have none or you selected the wrong place.");
                 return new string[0];
             }
         }
@@ -108,7 +117,7 @@ namespace PressJsonToJson
             }
             catch (IOException e)
             {
-                MessageBox.Show("Couldn't find any variants. You either have none or you selected the wrong place.");
+                //MessageBox.Show("Couldn't find any variants. You either have none or you selected the wrong place.");
                 return new List<string>();
             }
         }

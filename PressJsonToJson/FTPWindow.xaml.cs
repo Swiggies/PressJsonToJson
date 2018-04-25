@@ -34,6 +34,8 @@ namespace PressJsonToJson
             ftp = new FTP(txt_ftpAddress.Text, txt_ftpUsername.Text, txt_ftpPassword.Password, cb_FTPPassive.IsChecked.Value);
             mapsList = ftp.GetFoldersOverFTP(ftp.ftpDetails, "maps");
             typesList = ftp.GetFoldersOverFTP(ftp.ftpDetails, "variants");
+
+            Close();
         }
     }
 }

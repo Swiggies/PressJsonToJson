@@ -10,9 +10,9 @@
         Title="Press Json to Json" Height="504.5" Width="525" MinWidth="525" MinHeight="454">
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button Content="Help" Click="ShowHelp"/>
-            <Button Content="Relocate" Click="RelocateButton"/>
             <Button Content="FTP" Click="OpenFTPWindow"/>
+            <Button Content="Locate" Click="RelocateButton"/>
+            <Button Content="Help" Click="ShowHelp"/>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
