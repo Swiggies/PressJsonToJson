@@ -1,0 +1,33 @@
+﻿<Controls:MetroWindow x:Class="PressJsonToJson.FTPWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PressJsonToJson"
+        mc:Ignorable="d"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="FTP" Height="190" Width="478.667">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="txt_ftpAddress" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Label Content="Address:" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Username:" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Grid.Row="1"/>
+        <TextBox x:Name="txt_ftpUsername" HorizontalAlignment="Center" Height="23" Margin="10,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="150" Grid.Column="1" Grid.Row="1"/>
+        <Label Content="Password:" HorizontalAlignment="Center" Margin="0,7" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2"/>
+        <PasswordBox x:Name="txt_ftpPassword" Grid.Column="3" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="150"/>
+        <Button Content="Connect" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="2" VerticalAlignment="Center" Width="75" Grid.ColumnSpan="2" Grid.Column="1" Click="Button_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="90,13,0,13" Grid.Row="2" VerticalAlignment="Center" Width="75" Grid.Column="1"/>
+        <CheckBox x:Name="cb_FTPPassive" Content="Passive Mode" Grid.Column="3" HorizontalAlignment="Center" Margin="0" Grid.Row="2" VerticalAlignment="Center"/>
+
+    </Grid>
+</Controls:MetroWindow>

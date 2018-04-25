@@ -6,16 +6,17 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:PressJsonToJson"
         mc:Ignorable="d"
-        Title="Advanced Variant" Height="320" Width="300" MinWidth="300" MinHeight="288">
+        Title="Advanced Variant" Height="320" Width="300" MinWidth="300" MinHeight="288" ShowCloseButton="False" ShowMaxRestoreButton="False" ShowMinButton="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="60"/>
             <RowDefinition Height="37"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="mapsList" Margin="10,10,10,0" SelectionMode="Multiple" BorderThickness="1" MinWidth="150" BorderBrush="#FFCCCCCC"/>
+        <ListBox x:Name="mapsList" Margin="10,21,10,0" SelectionMode="Multiple" BorderThickness="1" MinWidth="150" BorderBrush="#FFCCCCCC"/>
         <TextBox x:Name="commands" Margin="10,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Text="Server.SprintEnabled 0&#xA;Server.AssassinationEnabled 0&#xA;Server.NumberOfTeams 2" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="1" MinHeight="0"/>
         <Button Content="Okay" Margin="10,0,10,5" VerticalAlignment="Bottom" Click="Button_Click" Controls:ButtonHelper.CornerRadius="1" Grid.Row="2"/>
+        <Label Content="Specific Maps" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Controls:MetroWindow>

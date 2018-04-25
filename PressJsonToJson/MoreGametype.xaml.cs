@@ -21,8 +21,7 @@ namespace PressJsonToJson
             InitializeComponent();
             typeStuff = new VotingTypes(typeName);
 
-            Defaults defaults = new Defaults();
-            foreach (KeyValuePair<string, string> kv in defaults.defaultMaps)
+            foreach (KeyValuePair<string, string> kv in Defaults.defaultMaps)
             {
                 var newItem = new ListBoxItem();
                 newItem.Content = kv.Key;
@@ -43,7 +42,10 @@ namespace PressJsonToJson
             foreach (ListBoxItem x in t)
             {
                 var m = new Maps(x.Content.ToString());
-                typeStuff.SpecificMaps.Add(m);
+                if (Defaults.defaultMaps.ContainsKey(m.displayName))
+                    typeStuff.SpecificMaps.Add(new Maps(m.displayName, Defaults.defaultMaps[m.displayName]));
+                else
+                    typeStuff.SpecificMaps.Add(m);
             }
             int lineCount = commands.LineCount;
 

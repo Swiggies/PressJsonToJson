@@ -1,0 +1,24 @@
+﻿<Controls:MetroWindow x:Class="PressJsonToJson.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PressJsonToJson"
+        mc:Ignorable="d"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Help" Height="268.488" Width="673.95">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Should I use voting or veto?" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="1" Margin="10,5,0,0"><Run Text="If your server is running on game modes that only need 1 map to play for each game mode, use veto."/><LineBreak/><Run Text="If your server has at least 2 game modes that can be played on many maps, use voting."/></TextBlock>
+        <Label Content="How To Use" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Grid.Row="2" />
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Width="646" Height="84"><Run Text="Make sure your maps and variants folders have the game modes you want to use (comes with some default variants and all default maps) otherwise you won't be able to select any."/><LineBreak/><Run/><LineBreak/><Run Text="If you downloaded a map "/><Run Text="that"/><Run Text=" didn't come in a folder, make a folder for that gametype/map with the name you want it to have otherwise ElDewrito will not be able to load it, neither will this."/><LineBreak/><Run Text=""/></TextBlock>
+        <TextBlock Margin="10" Grid.Row="4"><Hyperlink NavigateUri="https://github.com/Swiggies/PressJsonToJson/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="For more help/info click here."/></Hyperlink></TextBlock>
+    </Grid>
+</Controls:MetroWindow>

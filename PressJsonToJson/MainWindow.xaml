@@ -7,7 +7,15 @@
         
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Press Json to Json" Height="455" Width="525" MinWidth="525" MinHeight="454">
+        Title="Press Json to Json" Height="504.5" Width="525" MinWidth="525" MinHeight="454">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="Help" Click="ShowHelp"/>
+            <Button Content="Relocate" Click="RelocateButton"/>
+            <Button Content="FTP" Click="OpenFTPWindow"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="200"/>
@@ -19,12 +27,13 @@
             <ColumnDefinition MinWidth="0"/>
             <ColumnDefinition MinWidth="0"/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="ListMaps" Margin="10,10,5,0" SelectionMode="Multiple" BorderThickness="1" BorderBrush="#FFCCCCCC"/>
-        <ListBox x:Name="ListVariants" Margin="5,10,10,0" SelectionMode="Multiple" Grid.Column="1" BorderThickness="1" BorderBrush="#FFCCCCCC"/>
+        <ListBox x:Name="ListMaps" Margin="10,18,5,0" SelectionMode="Multiple" BorderThickness="1" BorderBrush="#FFCCCCCC"/>
+        <ListBox x:Name="ListVariants" Margin="5,18,10,0" SelectionMode="Multiple" Grid.Column="1" BorderThickness="1" BorderBrush="#FFCCCCCC"/>
         <GridSplitter HorizontalAlignment="Stretch" Height="1" Margin="10,5,10,0" ShowsPreview="True" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" Background="#FFCCCCCC"/>
         <Button x:Name="Btn_Convert" Content="Json" Margin="10,5,10,0" VerticalAlignment="Top" Click="Button_Click" Grid.ColumnSpan="2" Grid.Row="2" Controls:ButtonHelper.CornerRadius="0" FontSize="10"/>
-        <TextBox x:Name="txt_Ouput" Margin="10,5,10,10" TextWrapping="Wrap" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Grid.Row="3"/>
-        <Button Content="FTP" HorizontalAlignment="Left" Margin="74,0,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <TextBox x:Name="txt_Ouput" Margin="10,5,10,10" TextWrapping="Wrap" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Grid.Row="3" VerticalScrollBarVisibility="Auto"/>
+        <Label Content="Maps" HorizontalAlignment="Left" Margin="10,-4,0,0" VerticalAlignment="Top"/>
+        <Label Content="Variants" HorizontalAlignment="Left" Margin="10,-4,0,0" VerticalAlignment="Top" Grid.Column="1"/>
 
     </Grid>
 </Controls:MetroWindow>

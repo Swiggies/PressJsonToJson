@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.IO;
 using Newtonsoft.Json;
 using MahApps.Metro.Controls;
+using PressJsonToJson.Objects;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace PressJsonToJson
 {
@@ -16,50 +18,102 @@ namespace PressJsonToJson
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        string modsPath = Settings.Default.modsPath;
+
         List<VotingTypes> types = new List<VotingTypes>();
         List<Maps> maps = new List<Maps>();
-        Defaults defaults = new Defaults();
 
         public MainWindow()
         {
             InitializeComponent();
+            //CheckLocation();
+            PopulateListViews();
+        }
 
+        //Fill the list view with default stuff and custom stuff.
+        private void PopulateListViews()
+        {
             //Get Maps
-            foreach (KeyValuePair<string, string> kv in defaults.defaultMaps)
+            foreach (KeyValuePair<string, string> kv in Defaults.defaultMaps)
             {
-                var newItem = new ListBoxItem();
-                newItem.Content = kv.Key;
+                var newItem = ListItem.MakeMapListItem(kv.Key);
                 ListMaps.Items.Add(newItem);
             }
 
-            var maps = defaults.GetMaps();
+            var maps = GetMaps();
             foreach (string s in maps)
             {
-                var newItem = new ListBoxItem();
-                newItem.Content = s.Split('\\').Last();
+                var newItem = ListItem.MakeMapListItem(s.Split('\\').Last());
                 ListMaps.Items.Add(newItem);
             }
 
-
-            foreach (KeyValuePair<string, string> kv in defaults.defaultTypes)
+            foreach (KeyValuePair<string, string> kv in Defaults.defaultTypes)
             {
-                var newItem = new ListBoxItem();
-                newItem.Content = kv.Key;
+                var newItem = ListItem.MakeVariantListItem(kv.Key);
                 ListVariants.Items.Add(newItem);
                 newItem.Selected += (sender, r) => AdvancedGametypeWindow(maps, newItem);
             }
 
             //Get Gametypes
-            var types = defaults.GetGametypes();
+            var types = GetGametypes();
             foreach (string s in types)
             {
-                var newItem = new ListBoxItem();
-                newItem.Content = s.Split('\\').Last();
+                var newItem = ListItem.MakeMapListItem(s.Split('\\').Last());
                 ListVariants.Items.Add(newItem);
                 newItem.Selected += (sender, r) => AdvancedGametypeWindow(maps, newItem);
             }
         }
 
+        private bool CheckLocation()
+        {
+            if (modsPath == "" || !Directory.Exists($"{modsPath}/server"))
+                return false;
+            return true;
+        }
+
+        private void ShowLocateDialog()
+        {
+            modsPath = "";
+            while (!CheckLocation())
+            {
+                CommonOpenFileDialog dlg = new CommonOpenFileDialog();
+                dlg.IsFolderPicker = true;
+                if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+                    modsPath = dlg.FileName;
+                Settings.Default.modsPath = modsPath;
+                Settings.Default.Save();
+
+                PopulateListViews();
+            }
+        }
+
+        private string[] GetMaps()
+        {
+            try
+            {
+                return Directory.GetDirectories($"{modsPath}/maps");
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show("Couldn't find any maps. You either have none or you selected the wrong place.");
+                return new string[0];
+            }
+        }
+
+        private List<string> GetGametypes()
+        {
+            try
+            {
+                return Directory.GetDirectories($"{modsPath}/variants").ToList();
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show("Couldn't find any variants. You either have none or you selected the wrong place.");
+                return new List<string>();
+            }
+        }
+
+        //Open the AdvancedGametype window and return information.
         private void AdvancedGametypeWindow(string[] maps, ListBoxItem boxItem)
         {
             var w = new MoreGametype(maps, boxItem.Content.ToString());
@@ -78,7 +132,22 @@ namespace PressJsonToJson
             }
         }
 
-    public void ConvertToJson()
+        private void OpenFTPWindow(object sender, RoutedEventArgs e)
+        {
+            var w = new FTPWindow();
+            if (w.ShowDialog() == false)
+            {
+                var types = w.typesList;
+                foreach (string s in types)
+                    ListVariants.Items.Add(ListItem.MakeVariantListItem(s));
+                var maps = w.mapsList;
+                foreach (string s in maps)
+                    ListMaps.Items.Add(ListItem.MakeVariantListItem(s));
+            }
+        }
+
+        //Convert what's selected to json
+        private void ConvertToJson()
         {
             if (ListMaps.SelectedItems.Count > 0)
                 txt_Ouput.Text = MakeVotingJson();
@@ -86,93 +155,15 @@ namespace PressJsonToJson
                 txt_Ouput.Text = MakeVetoJson();          
         }
 
-        public string MakeVetoJson()
+        //Make the veto json
+        private string MakeVetoJson()
         {
-            Playlist p = new Playlist();
-            List<Veto> vList = new List<Veto>();
-
-            var t = ListVariants.SelectedItems;
-            //Go through each selected item in the list
-            foreach (ListBoxItem x in t)
-            {
-                Veto v = new Veto();
-                v.gametype.displayName = x.Content.ToString();
-                v.gametype.typeName = x.Content.ToString();
-                //Check if they match with any of the types in this.types
-                foreach (VotingTypes y in this.types)
-                {
-                    //If they do, do things
-                    if (y.displayName == v.gametype.displayName && y.typeName == v.gametype.typeName)
-                    {
-                        v.gametype.commands = y.commands;
-                        foreach (Maps m in y.SpecificMaps)
-                        {
-                            if (defaults.defaultMaps.ContainsKey(m.displayName))
-                            {
-                                v.map.displayName = m.displayName;
-                                v.map.mapName = defaults.defaultMaps[m.displayName];
-                            }
-                            else
-                            {
-                                v.map.displayName = m.displayName;
-                                v.map.mapName = m.displayName;
-                            }
-                            vList.Add(v);
-                        }
-                    }
-                }
-
-            }
-            p.playlist = vList;
-
-            if (vList.Count < 2)
-                MessageBox.Show("You need at least 2 gametypes selected.");
-            if (types.Count >= 2)
-                MessageBox.Show("No maps selected. Making a veto.json instead.");
-
-            return JsonConvert.SerializeObject(p, Formatting.Indented);
+            return JsonGenerator.MakeVetoJson(ListVariants.SelectedItems, types);
         }
 
-        public string MakeVotingJson()
+        private string MakeVotingJson()
         {
-            Voting v = new Voting();
-
-            List<Maps> maps = new List<Maps>();
-            var m = ListMaps.SelectedItems;
-            foreach (ListBoxItem x in m)
-            {
-                Maps newMap = new Maps();
-                if (defaults.defaultMaps.ContainsKey(x.Content.ToString()))
-                {
-                    newMap = new Maps(x.Content.ToString(), defaults.defaultMaps[x.Content.ToString()]);
-                }
-                else
-                {
-                    newMap = new Maps(x.Content.ToString());
-                }
-                maps.Add(newMap);
-            }
-            v.Maps = maps;
-
-            List<VotingTypes> types = new List<VotingTypes>();
-            var t = ListVariants.SelectedItems;
-            foreach (ListBoxItem x in t)
-            {
-                VotingTypes type = new VotingTypes(x.Content.ToString());
-                types.Add(type);
-                foreach (VotingTypes y in this.types)
-                {
-                    if (y.displayName == type.displayName && y.typeName == type.typeName)
-                    {
-                        type.commands = y.commands;
-                        type.SpecificMaps = y.SpecificMaps;
-                    }
-                }
-            }
-            v.Types = types;
-            if (maps.Count < 2 || types.Count < 2)
-                MessageBox.Show("You have less than 2 maps or game variants selected. There will be some compatibility issues with Eldewrito.");
-            return JsonConvert.SerializeObject(v, Formatting.Indented);
+            return JsonGenerator.MakeVotingJson(ListMaps.SelectedItems, ListVariants.SelectedItems, types);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -180,11 +171,19 @@ namespace PressJsonToJson
             ConvertToJson();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void RelocateButton(object sender, RoutedEventArgs e)
         {
-            FTP ftp = new FTP();
-            ftp.GetMapFoldersOverFTP();
-            ftp.GetTypeFoldersOverFTP();
+            ListMaps.Items.Clear();
+            ListVariants.Items.Clear();
+            ShowLocateDialog();
         }
+
+        private void ShowHelp(object sender, RoutedEventArgs e)
+        {
+            var helpWindow = new HelpWindow();
+            helpWindow.Show();
+        }
+
+
     }
 }
