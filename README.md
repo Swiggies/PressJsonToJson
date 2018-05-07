@@ -4,7 +4,9 @@ My tool to make it easier to make a voting.json file for Eldewrito.
 ![Preview](https://i.imgur.com/acivcXr.png)
 
 # Installation
-Unzip the folder into your Halo Online (Or whatever you renamed it to, the one with ldorado.exe).
+Unzip the folder into your Halo Online (Or whatever you renamed it to, the one with eldorado.exe).
+
+On first run a select folder dialog will show. Select the ElDewrito/mods folder with /maps and /variants in it.
 
 # Should I use voting or veto?
 If your server is running on game modes that only need 1 map to play for each game mode, use veto.
